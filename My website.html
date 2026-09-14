@@ -1,0 +1,809 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game👾 X Anime</title>
+
+    <style>
+        body {
+            background-color: rgb(150, 205, 203);
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            animation: pageLoad 1s ease-in;
+        }
+
+        @keyframes pageLoad {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            background-color: black;
+            margin: 0;
+            text-align: center;
+            color: white;
+            padding: 25px;
+            font-size: 50px;
+        }
+
+        nav {
+            background-color: rgb(111, 11, 225);
+            text-align: center;
+            padding: 15px;
+        }
+
+        nav a {
+            color: ghostwhite;
+            margin: 0 15px;
+            font-size: 20px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        section {
+            padding: 50px 15px;
+            min-height: 250px;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            color: rgb(5, 5, 225);
+            font-size: 25px;
+        }
+
+        h2 {
+            text-align: center;
+            color: rgb(204, 0, 255);
+        }
+
+        #home {
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .home-content {
+            max-width: 800px;
+            width: 90%;
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        #home-image {
+            width: 300px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: opacity 0.5s;
+        }
+
+        .hero-title {
+            font-size: 50px;
+            font-weight: bold;
+            margin: 15px 0;
+            background: linear-gradient(90deg, #7c3aed, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #home p {
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        #home button {
+            padding: 12px 25px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2563eb;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        #home button:hover {
+            background-color: #1d4ed8;
+            transform: scale(1.08);
+        }
+
+        .about-content {
+            max-width: 800px;
+            width: 90%;
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-content h2 {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .about-content p {
+            max-width: 650px;
+            margin: 15px auto;
+            line-height: 1.6;
+        }
+
+        #about button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #7c3aed, #2563eb);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #about button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.8);
+        }
+
+        .project-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .project-card {
+            width: 250px;
+            padding: 25px;
+            background-color: white;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .project-card h3 {
+            color: #1e293b;
+            font-size: 22px;
+        }
+
+        .project-card p {
+            font-size: 16px;
+            color: #475569;
+        }
+
+        .project-card button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2563eb;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .project-card button:hover {
+            background-color: #1d4ed8;
+            transform: scale(1.08);
+        }
+
+        #project-count {
+            font-size: 22px;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+
+        #message {
+            display: none;
+            margin: 20px auto 0;
+            background-color: rgba(232, 35, 35, 0.85);
+            padding: 17px;
+            border-radius: 60px;
+            max-width: 500px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 25px;
+            box-shadow: 0 5px 15px rgba(223, 107, 107, 0.15);
+        }
+
+        .contact-content {
+            max-width: 600px;
+            width: 90%;
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-content button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2563eb;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .contact-content button:hover {
+            transform: scale(1.08);
+        }
+
+        .save-name-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #7c3aed, #2563eb);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .save-name-button:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.8);
+        }
+
+        #saved-name {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, #7c3aed, #2563eb);
+            color: white;
+            border-radius: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+        }
+
+        footer {
+            background-color: #111827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer p {
+            color: white;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        body.dark-mode {
+            background-color: #111827;
+        }
+
+        body.dark-mode h1 {
+            background-color: black;
+        }
+
+        body.dark-mode .home-content,
+        body.dark-mode .about-content,
+        body.dark-mode .contact-content,
+        body.dark-mode .project-card {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        body.dark-mode h2 {
+            color: #c084fc;
+        }
+
+        body.dark-mode .project-card h3 {
+            color: white;
+        }
+
+        body.dark-mode p,
+        body.dark-mode .project-card p {
+            color: #e5e7eb;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 32px;
+                padding: 20px;
+            }
+
+            nav a {
+                display: block;
+                margin: 8px;
+            }
+
+            .home-content,
+            .about-content,
+            .contact-content {
+                width: auto;
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            #home-image {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+
+            #home p {
+                font-size: 20px;
+            }
+
+            #saved-name {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Welcome to My Website🌐</h1>
+
+    <nav>
+        <a href="#home" onclick="setActive(this)">Home</a>
+        <a href="#about" onclick="setActive(this)">About</a>
+        <a href="#projects" onclick="setActive(this)">Projects</a>
+        <a href="#contact" onclick="setActive(this)">Contacts</a>
+    </nav>
+
+    <section id="home">
+
+        <div class="home-content">
+
+            <img
+                id="home-image"
+                src="home.jpg"
+                alt="Game and Anime"
+            >
+
+            <h2 class="hero-title">
+                Welcome to Game👾 X Anime
+            </h2>
+
+            <p>
+                Here you can explore my games,
+                projects and anime-related content.
+            </p>
+
+            <button onclick="scrollToProjects()">
+                Explore Projects
+            </button>
+
+            <button
+                id="theme-button"
+                onclick="toggleDarkMode()"
+            >
+                🌙 Dark Mode
+            </button>
+
+        </div>
+
+    </section>
+
+    <section id="about">
+
+        <div class="about-content">
+
+            <h2>About Me</h2>
+
+            <p id="learning-text">
+                I am learning web coding.
+                This is the first website made by me.
+            </p>
+
+            <button onclick="changeText()">
+                Click Me
+            </button>
+
+            <p>
+                I am learning HTML, CSS and JavaScript
+                to create websites and games.
+            </p>
+
+        </div>
+
+    </section>
+
+    <section id="projects">
+
+        <h2>My Projects</h2>
+
+        <p id="project-count">
+            Loading projects...
+        </p>
+
+        <p>
+            Here I will show my projects.
+        </p>
+
+        <div class="project-container">
+
+            <div class="project-card">
+
+                <h3>Calculator</h3>
+
+                <p>
+                    It is made by me using
+                    HTML, CSS and JavaScript.
+                </p>
+
+                <button
+                    onclick="openProject('Calculator.html')"
+                >
+                    View Project
+                </button>
+
+            </div>
+
+            <div class="project-card">
+
+                <h3>Bird Hunter</h3>
+
+                <p>
+                    It is a bird hunting game🎮.
+                </p>
+
+                <button
+                    onclick="openProject('Bird Hunt.html')"
+                >
+                    View Project
+                </button>
+
+            </div>
+
+            <div class="project-card">
+
+                <h3>Website🌐</h3>
+
+                <p>
+                    My first personal website🌐
+                </p>
+
+                <button
+                    onclick="showMessage('Website')"
+                >
+                    View Project
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="message"></div>
+
+    </section>
+
+    <section id="contact">
+
+        <div class="contact-content">
+
+            <h2>Contact</h2>
+
+            <p>
+                You can contact me here.
+            </p>
+
+            <button onclick="contactClicked(this)">
+                Contact Me
+            </button>
+
+        </div>
+
+    </section>
+
+    <p>
+        I hope this website will be useful for you.
+    </p>
+
+    <button
+        class="save-name-button"
+        onclick="saveName()"
+    >
+        Save My Name
+    </button>
+
+    <p id="saved-name"></p>
+
+    <footer>
+
+        <p>Game👾 X Anime</p>
+
+        <p>
+            Made with HTML, CSS & JavaScript
+        </p>
+
+    </footer>
+
+    <script>
+
+        function showMessage(projectName) {
+
+            var msgDiv =
+                document.getElementById("message");
+
+            msgDiv.textContent =
+                "You selected: " + projectName;
+
+            msgDiv.style.display = "block";
+        }
+
+
+        function openProject(page) {
+
+            window.location.href = page;
+        }
+
+
+        function scrollToProjects() {
+
+            document
+                .getElementById("projects")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+        }
+
+
+        function setActive(link) {
+
+            var links =
+                document.querySelectorAll("nav a");
+
+            links.forEach(function(item) {
+
+                item.classList.remove("active");
+
+            });
+
+            link.classList.add("active");
+        }
+
+
+        function contactClicked(button) {
+
+            button.textContent =
+                "Clicked! ✓";
+
+            setTimeout(function() {
+
+                button.textContent =
+                    "Contact Me";
+
+            }, 1500);
+        }
+
+
+        function changeText() {
+
+            var text =
+                document.getElementById("learning-text");
+
+            var button =
+                document.querySelector("#about button");
+
+
+            if (button.textContent.trim() === "Click Me") {
+
+                text.textContent =
+                    "I am learning HTML, CSS and JavaScript! 🚀";
+
+                button.textContent =
+                    "Done ✓";
+
+            } else {
+
+                text.textContent =
+                    "I am learning web coding. This is the first website made by me with the help of ChatGPT.";
+
+                button.textContent =
+                    "Click Me";
+            }
+        }
+
+
+        function countProjects() {
+
+            var projects =
+                document.querySelectorAll(".project-card");
+
+            document.getElementById("project-count").textContent =
+                "Total Projects: " + projects.length;
+        }
+
+
+        function toggleDarkMode() {
+
+            var button =
+                document.getElementById("theme-button");
+
+            document.body.classList.toggle("dark-mode");
+
+
+            if (
+                document.body.classList.contains("dark-mode")
+            ) {
+
+                localStorage.setItem(
+                    "darkMode",
+                    "on"
+                );
+
+                button.textContent =
+                    "☀️ Light Mode";
+
+            } else {
+
+                localStorage.setItem(
+                    "darkMode",
+                    "off"
+                );
+
+                button.textContent =
+                    "🌙 Dark Mode";
+            }
+        }
+
+
+        function loadDarkMode() {
+
+            var button =
+                document.getElementById("theme-button");
+
+
+            if (
+                localStorage.getItem("darkMode") === "on"
+            ) {
+
+                document.body.classList.add("dark-mode");
+
+                button.textContent =
+                    "☀️ Light Mode";
+            }
+        }
+
+
+        function saveName() {
+
+            var name =
+                prompt("Enter your name:");
+
+
+            if (name && name.trim() !== "") {
+
+                name = name.trim();
+
+                localStorage.setItem(
+                    "userName",
+                    name
+                );
+
+                showSavedName();
+
+                alert("Name saved!");
+            }
+        }
+
+
+        function showSavedName() {
+
+            var savedName =
+                localStorage.getItem("userName");
+
+            var nameBox =
+                document.getElementById("saved-name");
+
+
+            if (savedName) {
+
+                nameBox.textContent =
+                    "Welcome, " + savedName + "! 👋";
+
+            } else {
+
+                nameBox.textContent = "";
+            }
+        }
+
+
+        var images = [
+            "home.jpg",
+            "home (2).jpg",
+            "home3.jpg",
+            "home4.jpg"
+        ];
+
+        var currentImage = 0;
+
+
+        function changeImage() {
+
+            currentImage++;
+
+
+            if (currentImage >= images.length) {
+
+                currentImage = 0;
+            }
+
+
+            var image =
+                document.getElementById("home-image");
+
+
+            image.style.opacity = "0";
+
+
+            setTimeout(function() {
+
+                image.src =
+                    images[currentImage];
+
+                image.style.opacity = "1";
+
+            }, 300);
+        }
+
+
+        setInterval(changeImage, 10000);
+
+
+        countProjects();
+        loadDarkMode();
+        showSavedName();
+
+    </script>
+
+</body>
+
+</html>
+```

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Calculator🧮</title>
+    </head>
+
+    <body>
+
+        <div class="calculator">
+
+        <h1>My Calculator🧮</h1>
+        
+        <input type="text" id="display" readonly>
+
+        
+
+        
+        <div class="buttons">
+
+            <button class="function" onclick="clearAll()">AC</button>
+            <button class="function" onclick="deleteNumber()">DEL</button>
+            <button class="function" onclick="percentage()">%</button>
+            <button class="operator" onclick="chooseOperator('/')">÷</button>
+
+            <button onclick="addNumber('7')">7</button>
+            <button onclick="addNumber('8')">8</button>
+            <button onclick="addNumber('9')">9</button>
+            <button class="operator" onclick="chooseOperator('*')">×</button>
+
+            <button onclick="addNumber('4')">4</button>
+            <button onclick="addNumber('5')">5</button>
+            <button onclick="addNumber('6')">6</button>
+            <button class="operator" onclick="chooseOperator('-')">-</button>
+
+            <button onclick="addNumber('1')">1</button>
+            <button onclick="addNumber('2')">2</button>
+            <button onclick="addNumber('3')">3</button>
+            <button class="operator" onclick="chooseOperator('+')">+</button>
+
+            <button onclick="changeSign()">+/-</button>
+            <button onclick="addNumber('0')">0</button>
+            <button onclick="addNumber('.')">.</button>
+            <button class="equals" onclick="calculate()">=</button>
+
+        </div>
+
+        </div>
+
+       
+        
+        <script>
+
+            let currentNumber = "0";
+let firstNumber = null;
+let operatorSymbol = null;
+let waitingForNumber = false;
+let lastOperator = null;
+let lastNumber = null;
+
+
+function updateDisplay() {
+    document.getElementById("display").value = currentNumber;
+}
+
+
+function addNumber(number) {
+
+    if (waitingForNumber) {
+        currentNumber = "0";
+        waitingForNumber = false;
+    }
+
+    if (number === "." && currentNumber.includes(".")) {
+        return;
+    }
+
+    if (currentNumber === "0" && number !== ".") {
+        currentNumber = number;
+    } 
+    else {
+        currentNumber += number;
+    }
+
+    updateDisplay();
+}
+
+
+function chooseOperator(symbol) {
+
+    if (operatorSymbol !== null && !waitingForNumber) {
+        calculate();
+    }
+
+    firstNumber = Number(currentNumber);
+
+    operatorSymbol = symbol;
+
+    waitingForNumber = true;
+}
+
+
+function calculate() {
+
+    if (operatorSymbol === null) {
+        return;
+    }
+
+    let secondNumber = Number(currentNumber);
+
+    if (operatorSymbol === "/" && secondNumber === 0) {
+        currentNumber = "Cannot divide by 0";
+
+        updateDisplay();
+
+        firstNumber = null;
+        operatorSymbol = null;
+
+        return;
+    }
+
+    let answer;
+
+    if (operatorSymbol === "+") {
+        answer = firstNumber + secondNumber;
+    }
+
+    else if (operatorSymbol === "-") {
+        answer = firstNumber - secondNumber;
+    }
+
+    else if (operatorSymbol === "*") {
+        answer = firstNumber * secondNumber;
+    }
+
+    else if (operatorSymbol === "/") {
+        answer = firstNumber / secondNumber;
+    }
+
+    currentNumber = String(answer);
+
+    firstNumber = null;
+    operatorSymbol = null;
+
+    waitingForNumber = true;
+
+    updateDisplay();
+}
+
+
+function clearAll() {
+
+    currentNumber = "0";
+    firstNumber = null;
+    operatorSymbol = null;
+    waitingForNumber = false;
+
+    lastOperator = null;
+    lastNumber = null;
+
+    updateDisplay();
+}
+
+
+function deleteNumber() {
+
+    if (currentNumber.length === 1) {
+        currentNumber = "0";
+    }
+    else {
+        currentNumber = currentNumber.slice(0, -1);
+    }
+
+    updateDisplay();
+}
+
+
+function percentage() {
+
+    let number = Number(currentNumber);
+
+    number = number / 100;
+
+    currentNumber = String(number);
+
+    updateDisplay();
+}
+
+
+function changeSign() {
+
+    if (currentNumber === "0") {
+        return;
+    }
+
+    if (currentNumber.startsWith("-")) {
+        currentNumber = currentNumber.slice(1);
+    }
+    else {
+        currentNumber = "-" + currentNumber;
+    }
+
+    updateDisplay();
+}
+
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key >= "0" && event.key <= "9") {
+        addNumber(event.key);
+    }
+
+    else if (event.key === ".") {
+        addNumber(".");
+    }
+
+    else if (event.key === "+") {
+        chooseOperator("+");
+    }
+
+    else if (event.key === "-") {
+        chooseOperator("-");
+    }
+
+    else if (event.key === "*") {
+        chooseOperator("*");
+    }
+
+    else if (event.key === "/") {
+        chooseOperator("/");
+    }
+
+    else if (event.key === "Enter" || event.key === "=") {
+        calculate();
+    }
+
+    else if (event.key === "Escape") {
+        clearAll();
+    }
+
+    else if (event.key === "Backspace") {
+        deleteNumber();
+    }
+
+});
+
+           </script>
+
+        <style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #8daac3;
+
+    font-family: Arial, sans-serif;
+}
+
+.calculator {
+    width: 360px;
+    padding: 25px;
+
+    background: #1e293b;
+
+    border-radius: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    text-align: center;
+
+    color: white;
+
+    font-size: 28px;
+}
+
+#display {
+    width: 100%;
+    height: 80px;
+
+    padding: 15px;
+
+    margin-bottom: 20px;
+
+    border: none;
+    border-radius: 15px;
+
+    background: #111827;
+    color: white;
+
+    font-size: 36px;
+
+    text-align: right;
+
+    outline: none;
+}
+
+.buttons {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+button {
+    height: 65px;
+
+    border: none;
+    border-radius: 15px;
+
+    background: #334155;
+    color: white;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 0 #172033;
+
+    transition: 0.1s;
+}
+
+button:hover {
+    background: #5c7fb0;
+}
+
+button:active {
+    transform: translateY(6px);
+
+    box-shadow: 0 0 0 #435a8d;
+}
+
+.function {
+    background: #d04d10;
+}
+
+.function:hover {
+    background: #a55637;
+}
+
+.operator {
+    background: #edf100;
+}
+
+.operator:hover {
+    background: #fbbf24;
+}
+
+.equals {
+    background: #2563eb;
+}
+
+.equals:hover {
+    background: #3b82f6;
+}
+
+        </style>
+
+    </body>
+</html>

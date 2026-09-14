@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duck Hunt Game</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    cursor:crosshair;
+}
+
+/* ================= GAME ================= */
+
+#game{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background:linear-gradient(
+        #48a9dc 0%,
+        #b8e7f5 48%,
+        #6ba94d 49%,
+        #285b32 100%
+    );
+}
+
+/* ================= BACKGROUND ================= */
+
+#sun{
+    position:absolute;
+    right:10%;
+    top:8%;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:#ffe65b;
+    box-shadow:0 0 50px #fff3a0;
+}
+
+.cloud{
+    position:absolute;
+    width:150px;
+    height:40px;
+    background:white;
+    border-radius:50px;
+    opacity:.75;
+}
+
+.cloud::before,
+.cloud::after{
+    content:"";
+    position:absolute;
+    background:white;
+    border-radius:50%;
+}
+
+.cloud::before{
+    width:65px;
+    height:65px;
+    left:25px;
+    top:-28px;
+}
+
+.cloud::after{
+    width:55px;
+    height:55px;
+    right:20px;
+    top:-20px;
+}
+
+.cloud1{
+    left:8%;
+    top:14%;
+}
+
+.cloud2{
+    left:48%;
+    top:10%;
+    transform:scale(.7);
+}
+
+.cloud3{
+    right:5%;
+    top:25%;
+    transform:scale(.6);
+}
+
+.mountain{
+    position:absolute;
+    bottom:28%;
+    width:0;
+    height:0;
+    border-left:180px solid transparent;
+    border-right:180px solid transparent;
+    border-bottom:260px solid #54786e;
+}
+
+.mountain1{
+    left:-100px;
+}
+
+.mountain2{
+    left:30%;
+    transform:scale(.8);
+}
+
+.mountain3{
+    right:-60px;
+}
+
+#water{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:30%;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #247a91 0px,
+            #247a91 7px,
+            #3d9aad 7px,
+            #3d9aad 11px
+        );
+}
+
+#grass{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:19%;
+    z-index:5;
+    background:
+        repeating-linear-gradient(
+            100deg,
+            #245628 0px,
+            #245628 7px,
+            #39753b 7px,
+            #39753b 12px
+        );
+}
+
+/* ================= TREES ================= */
+
+.tree{
+    position:absolute;
+    bottom:16%;
+    width:25px;
+    height:150px;
+    background:#51341f;
+    z-index:6;
+}
+
+.tree::before{
+    content:"";
+    position:absolute;
+    width:145px;
+    height:145px;
+    left:-60px;
+    top:-110px;
+    border-radius:50%;
+    background:#19562c;
+    box-shadow:
+        55px -15px #246b36,
+        90px 20px #124523,
+        -20px 25px #2f763e;
+}
+
+.tree1{
+    left:5%;
+}
+
+.tree2{
+    right:6%;
+}
+
+.tree3{
+    left:28%;
+    transform:scale(.6);
+}
+
+.tree4{
+    right:30%;
+    transform:scale(.65);
+}
+
+/* ================= HUD ================= */
+
+#hud{
+    position:absolute;
+    top:10px;
+    left:10px;
+    right:10px;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    color:white;
+    font-weight:bold;
+    text-shadow:2px 2px 4px black;
+}
+
+.hudBox{
+    background:rgba(0,0,0,.7);
+    padding:9px 12px;
+    border-radius:10px;
+}
+
+/* ================= AIM ================= */
+
+#aim{
+    position:fixed;
+    width:58px;
+    height:58px;
+    z-index:300;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+}
+
+#aim::before{
+    content:"";
+    position:absolute;
+    width:58px;
+    height:3px;
+    top:27px;
+    background:red;
+}
+
+#aim::after{
+    content:"";
+    position:absolute;
+    width:3px;
+    height:58px;
+    left:27px;
+    background:red;
+}
+
+#aimCircle{
+    position:absolute;
+    left:9px;
+    top:9px;
+    width:40px;
+    height:40px;
+    border:3px solid red;
+    border-radius:50%;
+}
+
+/* ================= TARGET ================= */
+
+.target{
+    position:absolute;
+    width:100px;
+    height:80px;
+    z-index:20;
+}
+
+/* ================= DUCK ================= */
+
+.duck{
+    position:absolute;
+    width:90px;
+    height:70px;
+}
+
+.duckBody{
+    position:absolute;
+    left:18px;
+    top:30px;
+    width:55px;
+    height:35px;
+    border-radius:60%;
+    background:#a46325;
+}
+
+.duckHead{
+    position:absolute;
+    left:55px;
+    top:8px;
+    width:33px;
+    height:33px;
+    border-radius:50%;
+    background:#258441;
+}
+
+.duckHead::before{
+    content:"";
+    position:absolute;
+    right:-20px;
+    top:11px;
+    width:23px;
+    height:11px;
+    background:#f0a52d;
+    clip-path:polygon(0 0,100% 50%,0 100%);
+}
+
+.duckEye{
+    position:absolute;
+    right:7px;
+    top:7px;
+    width:6px;
+    height:6px;
+    background:white;
+    border-radius:50%;
+}
+
+.duckWing{
+    position:absolute;
+    left:8px;
+    top:29px;
+    width:46px;
+    height:25px;
+    border-radius:70%;
+    background:#703e14;
+    transform:rotate(-15deg);
+}
+
+.duckTail{
+    position:absolute;
+    left:0;
+    top:29px;
+    width:30px;
+    height:25px;
+    background:#683b16;
+    clip-path:polygon(
+        100% 50%,
+        0 0,
+        25% 50%,
+        0 100%
+    );
+}
+
+/* ================= CROW ================= */
+
+.crow{
+    position:absolute;
+    width:90px;
+    height:70px;
+}
+
+.crowBody{
+    position:absolute;
+    left:18px;
+    top:28px;
+    width:55px;
+    height:35px;
+    border-radius:60%;
+    background:#11151a;
+}
+
+.crowHead{
+    position:absolute;
+    left:54px;
+    top:8px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#252a30;
+}
+
+.crowHead::before{
+    content:"";
+    position:absolute;
+    right:-20px;
+    top:12px;
+    width:23px;
+    height:11px;
+    background:#111;
+    clip-path:polygon(0 0,100% 50%,0 100%);
+}
+
+.crowEye{
+    position:absolute;
+    right:7px;
+    top:8px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:red;
+}
+
+.crowWing{
+    position:absolute;
+    left:3px;
+    top:20px;
+    width:50px;
+    height:28px;
+    border-radius:80%;
+    background:#080a0d;
+    transform:rotate(-25deg);
+}
+
+/* ================= BOMB ================= */
+
+.bomb{
+    position:absolute;
+    width:75px;
+    height:75px;
+}
+
+.bombBody{
+    position:absolute;
+    left:10px;
+    top:12px;
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:radial-gradient(
+        circle at 30% 25%,
+        #666,
+        #111 65%
+    );
+    border:3px solid #333;
+}
+
+.bombWarning{
+    position:absolute;
+    left:21px;
+    top:24px;
+    width:33px;
+    height:33px;
+    border-radius:50%;
+    background:#e32129;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.fuse{
+    position:absolute;
+    left:47px;
+    top:0;
+    width:5px;
+    height:20px;
+    background:#704622;
+    transform:rotate(25deg);
+}
+
+.flame{
+    position:absolute;
+    left:44px;
+    top:-17px;
+    font-size:22px;
+}
+
+/* ================= MESSAGE ================= */
+
+#message{
+    position:fixed;
+    left:50%;
+    top:45%;
+    transform:translate(-50%,-50%);
+    z-index:400;
+    display:none;
+    color:#ffe500;
+    font-size:42px;
+    font-weight:bold;
+    text-shadow:3px 3px 6px black;
+}
+
+/* ================= FLASH ================= */
+
+#flash{
+    position:fixed;
+    inset:0;
+    background:white;
+    opacity:0;
+    z-index:250;
+    pointer-events:none;
+}
+
+/* ================= ENVIRONMENT ================= */
+
+#environmentName{
+    position:absolute;
+    left:50%;
+    top:70px;
+    transform:translateX(-50%);
+    z-index:90;
+    color:white;
+    font-size:24px;
+    font-weight:bold;
+    text-shadow:2px 2px 5px black;
+    opacity:0;
+}
+
+/* =====================================================
+   MENUS
+===================================================== */
+
+.menu{
+    position:fixed;
+    inset:0;
+
+    z-index:1000;
+
+    display:none;
+
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    color:white;
+
+    background:rgba(0,0,0,.84);
+
+    padding:20px;
+}
+
+.menu.active{
+    display:flex;
+}
+
+.menu h1{
+    margin:5px;
+    font-size:clamp(45px,9vw,80px);
+    text-shadow:4px 4px 8px black;
+}
+
+.menu h2{
+    font-size:34px;
+}
+
+.menu p{
+    font-size:18px;
+    line-height:1.8;
+}
+
+.gameButton{
+    border:0;
+    margin-top:20px;
+    padding:18px 50px;
+    border-radius:14px;
+    background:#159447;
+    color:white;
+    border:4px solid white;
+    font-size:27px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:
+        0 6px 0 #075b28,
+        0 10px 20px rgba(0,0,0,.5);
+}
+
+.gameButton:hover{
+    background:#20b957;
+    transform:scale(1.05);
+}
+
+.gameButton:active{
+    transform:translateY(5px);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:650px){
+
+    #hud{
+        font-size:10px;
+    }
+
+    .hudBox{
+        padding:7px 5px;
+    }
+
+    .menu p{
+        font-size:14px;
+    }
+
+    .menu h2{
+        font-size:27px;
+    }
+
+    .gameButton{
+        font-size:23px;
+        padding:16px 35px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- BACKGROUND -->
+    <div id="sun"></div>
+
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+
+    <div class="mountain mountain1"></div>
+    <div class="mountain mountain2"></div>
+    <div class="mountain mountain3"></div>
+
+    <div id="water"></div>
+
+    <div class="tree tree1"></div>
+    <div class="tree tree2"></div>
+    <div class="tree tree3"></div>
+    <div class="tree tree4"></div>
+
+    <div id="grass"></div>
+
+
+    <!-- ENVIRONMENT NAME -->
+    <div id="environmentName"></div>
+
+
+    <!-- HUD -->
+    <div id="hud">
+
+        <div class="hudBox">
+            🏆 Score:
+            <span id="score">0</span>
+        </div>
+
+        <div class="hudBox">
+            🔥 Level:
+            <span id="level">1</span>
+        </div>
+
+        <div class="hudBox">
+            ❌ Failed:
+            <span id="failed">0</span> /
+            <span id="failedLimit">10</span>
+        </div>
+
+        <div class="hudBox">
+            🎯 Hits:
+            <span id="hits">0</span>
+        </div>
+
+    </div>
+
+
+    <!-- AIM -->
+    <div id="aim">
+        <div id="aimCircle"></div>
+    </div>
+
+
+    <!-- MESSAGE -->
+    <div id="message"></div>
+
+
+    <!-- FLASH -->
+    <div id="flash"></div>
+
+
+    <!-- =================================================
+         START MENU
+    ================================================== -->
+
+    <div
+        id="startMenu"
+        class="menu active"
+    >
+
+        <h1>🦆 DUCK HUNT</h1>
+
+        <h2>🎯 READY TO HUNT?</h2>
+
+        <p>
+
+            🦆 Duck = <b>+10</b><br>
+            🐦 Crow = <b>+20</b><br>
+            💣 Bomb Bird = <b>-10</b><br>
+            ❌ Miss = <b>1 Failed Shot</b><br><br>
+
+            Failed limits:<br>
+            <b>10 → 15 → 20 → 25 → 30</b>
+
+        </p>
+
+        <button
+            id="startButton"
+            class="gameButton"
+        >
+            ▶ START GAME
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         LEVEL COMPLETE MENU
+    ================================================== -->
+
+    <div
+        id="levelMenu"
+        class="menu"
+    >
+
+        <h1>🎉 LEVEL COMPLETE!</h1>
+
+        <h2>
+            Level
+            <span id="completedLevel">1</span>
+        </h2>
+
+        <p>
+
+            🏆 Score:
+            <b id="levelScore">0</b>
+
+            <br><br>
+
+            🌍 Next Environment:
+            <b id="nextEnvironment">---</b>
+
+            <br><br>
+
+            ❌ Failed Limit:
+            <b id="nextFailed">15</b>
+
+        </p>
+
+        <button
+            id="nextLevelButton"
+            class="gameButton"
+        >
+            ▶ PLAY LEVEL 2
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         GAME OVER MENU
+    ================================================== -->
+
+    <div
+        id="gameOverMenu"
+        class="menu"
+    >
+
+        <h1>💥 GAME OVER</h1>
+
+        <h2>Nice Try!</h2>
+
+        <p>
+
+            🏆 Final Score:
+            <b id="finalScore">0</b>
+
+            <br><br>
+
+            🔥 Level:
+            <b id="finalLevel">1</b>
+
+            <br><br>
+
+            ❌ Failed Shots:
+            <b id="finalFailed">0</b>
+
+        </p>
+
+        <button
+            id="restartButton"
+            class="gameButton"
+        >
+            🔄 RESTART GAME
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const game =
+    document.getElementById("game");
+
+const startMenu =
+    document.getElementById("startMenu");
+
+const levelMenu =
+    document.getElementById("levelMenu");
+
+const gameOverMenu =
+    document.getElementById("gameOverMenu");
+
+const startButton =
+    document.getElementById("startButton");
+
+const nextLevelButton =
+    document.getElementById("nextLevelButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const scoreText =
+    document.getElementById("score");
+
+const levelText =
+    document.getElementById("level");
+
+const failedText =
+    document.getElementById("failed");
+
+const failedLimitText =
+    document.getElementById("failedLimit");
+
+const hitsText =
+    document.getElementById("hits");
+
+const aim =
+    document.getElementById("aim");
+
+const flash =
+    document.getElementById("flash");
+
+const message =
+    document.getElementById("message");
+
+const environmentName =
+    document.getElementById("environmentName");
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let score = 0;
+let level = 1;
+let hits = 0;
+let failedShots = 0;
+
+let gameRunning = false;
+let levelRunning = false;
+
+let birds = [];
+
+let spawnTimer = null;
+
+let audioContext = null;
+
+let currentEnvironment = "";
+
+
+/* =====================================================
+   ENVIRONMENTS
+===================================================== */
+
+const environments = [
+
+    {
+        name:"🌲 GREEN FOREST",
+        sky:"linear-gradient(#48a9dc,#b8e7f5 48%,#6ba94d 49%,#285b32)",
+        sun:"#ffe65b",
+        mountain:"#54786e",
+        water:"#247a91",
+        grass:"#245628",
+        tree:"#51341f"
+    },
+
+    {
+        name:"🌅 GOLDEN SUNSET",
+        sky:"linear-gradient(#bd4f48,#f29b58 48%,#b96d45 49%,#503a2d)",
+        sun:"#ffd05a",
+        mountain:"#5e5157",
+        water:"#50546d",
+        grass:"#4b472d",
+        tree:"#493326"
+    },
+
+    {
+        name:"🏔️ MOUNTAIN VALLEY",
+        sky:"linear-gradient(#477bb5,#b5d6df 48%,#769b70 49%,#385b39)",
+        sun:"#fff0a0",
+        mountain:"#45545c",
+        water:"#3c7180",
+        grass:"#315e35",
+        tree:"#463524"
+    },
+
+    {
+        name:"🌊 BLUE LAKE",
+        sky:"linear-gradient(#087fa8,#8edbea 48%,#52a2a1 49%,#245b68)",
+        sun:"#fff17a",
+        mountain:"#3e6670",
+        water:"#126c8b",
+        grass:"#285c4c",
+        tree:"#453326"
+    },
+
+    {
+        name:"🌌 EVENING HUNT",
+        sky:"linear-gradient(#171b4c,#464a8d 48%,#3f573e 49%,#172e20)",
+        sun:"#e4d77c",
+        mountain:"#30364b",
+        water:"#1f4755",
+        grass:"#193a24",
+        tree:"#30241e"
+    }
+
+];
+
+
+/* =====================================================
+   IMPORTANT MENU FUNCTION
+===================================================== */
+
+/*
+   This function is the main fix.
+
+   It removes "active" from EVERY menu first.
+   Therefore an old menu can never remain visible
+   when another game state starts.
+*/
+
+function hideAllMenus(){
+
+    startMenu.classList.remove("active");
+
+    levelMenu.classList.remove("active");
+
+    gameOverMenu.classList.remove("active");
+
+}
+
+
+/*
+   Show exactly ONE menu.
+*/
+
+function showMenu(menu){
+
+    hideAllMenus();
+
+    if(menu){
+        menu.classList.add("active");
+    }
+
+}
+
+
+/* =====================================================
+   AUDIO
+===================================================== */
+
+function initAudio(){
+
+    if(!audioContext){
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    if(audioContext.state === "suspended"){
+
+        audioContext.resume();
+
+    }
+
+}
+
+
+function playSound(type){
+
+    initAudio();
+
+    const now =
+        audioContext.currentTime;
+
+    const osc =
+        audioContext.createOscillator();
+
+    const gain =
+        audioContext.createGain();
+
+
+    if(type === "gun"){
+
+        osc.type = "sawtooth";
+
+        osc.frequency.setValueAtTime(
+            150,
+            now
+        );
+
+        osc.frequency.exponentialRampToValueAtTime(
+            35,
+            now + .15
+        );
+
+        gain.gain.setValueAtTime(
+            .45,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .15
+        );
+
+    }
+
+
+    if(type === "duck"){
+
+        osc.type = "triangle";
+
+        osc.frequency.setValueAtTime(
+            800,
+            now
+        );
+
+        osc.frequency.exponentialRampToValueAtTime(
+            250,
+            now + .25
+        );
+
+        gain.gain.setValueAtTime(
+            .3,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .25
+        );
+
+    }
+
+
+    if(type === "crow"){
+
+        osc.type = "sawtooth";
+
+        osc.frequency.setValueAtTime(
+            450,
+            now
+        );
+
+        osc.frequency.exponentialRampToValueAtTime(
+            140,
+            now + .3
+        );
+
+        gain.gain.setValueAtTime(
+            .25,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .3
+        );
+
+    }
+
+
+    if(type === "bomb"){
+
+        osc.type = "square";
+
+        osc.frequency.setValueAtTime(
+            160,
+            now
+        );
+
+        osc.frequency.exponentialRampToValueAtTime(
+            35,
+            now + .4
+        );
+
+        gain.gain.setValueAtTime(
+            .35,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .4
+        );
+
+    }
+
+
+    osc.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+    osc.start(now);
+
+    osc.stop(
+        now + (
+            type === "bomb" ? .4 : .3
+        )
+    );
+
+}
+
+
+/* =====================================================
+   AIM
+===================================================== */
+
+document.addEventListener(
+    "mousemove",
+    function(e){
+
+        aim.style.left =
+            e.clientX + "px";
+
+        aim.style.top =
+            e.clientY + "px";
+
+    }
+);
+
+
+/* =====================================================
+   FAILED LIMIT
+===================================================== */
+
+function getFailedLimit(){
+
+    return Math.min(
+        10 + (level - 1) * 5,
+        30
+    );
+
+}
+
+
+/* =====================================================
+   HUD
+===================================================== */
+
+function updateHUD(){
+
+    scoreText.textContent =
+        score;
+
+    levelText.textContent =
+        level;
+
+    hitsText.textContent =
+        hits;
+
+    failedText.textContent =
+        failedShots;
+
+    failedLimitText.textContent =
+        getFailedLimit();
+
+}
+
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+function changeEnvironment(){
+
+    let env;
+
+    do{
+
+        env =
+            environments[
+                Math.floor(
+                    Math.random() *
+                    environments.length
+                )
+            ];
+
+    }while(
+        env.name === currentEnvironment &&
+        environments.length > 1
+    );
+
+
+    currentEnvironment =
+        env.name;
+
+
+    game.style.background =
+        env.sky;
+
+    document.getElementById("sun")
+        .style.background =
+        env.sun;
+
+
+    document.querySelectorAll(
+        ".mountain"
+    ).forEach(
+        mountain => {
+
+            mountain.style
+                .borderBottomColor =
+                env.mountain;
+
+        }
+    );
+
+
+    document.getElementById("water")
+        .style.background =
+        `
+        repeating-linear-gradient(
+            0deg,
+            ${env.water} 0px,
+            ${env.water} 7px,
+            rgba(255,255,255,.18) 7px,
+            rgba(255,255,255,.18) 11px
+        )
+        `;
+
+
+    document.getElementById("grass")
+        .style.background =
+        `
+        repeating-linear-gradient(
+            100deg,
+            ${env.grass} 0px,
+            ${env.grass} 7px,
+            rgba(255,255,255,.08) 7px,
+            rgba(255,255,255,.08) 12px
+        )
+        `;
+
+
+    document.querySelectorAll(
+        ".tree"
+    ).forEach(
+        tree => {
+
+            tree.style.background =
+                env.tree;
+
+        }
+    );
+
+
+    environmentName.textContent =
+        env.name;
+
+    environmentName.style.opacity =
+        "1";
+
+
+    setTimeout(
+        () => {
+
+            environmentName.style.opacity =
+                "0";
+
+        },
+        2000
+    );
+
+}
+
+
+/* =====================================================
+   CREATE DUCK
+===================================================== */
+
+function createDuck(){
+
+    const target =
+        document.createElement("div");
+
+    target.className =
+        "target";
+
+    target.innerHTML = `
+
+        <div class="duck">
+
+            <div class="duckTail"></div>
+
+            <div class="duckBody"></div>
+
+            <div class="duckWing"></div>
+
+            <div class="duckHead">
+
+                <div class="duckEye"></div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    game.appendChild(target);
+
+    addBird(
+        target,
+        "duck"
+    );
+
+}
+
+
+/* =====================================================
+   CREATE CROW
+===================================================== */
+
+function createCrow(){
+
+    const target =
+        document.createElement("div");
+
+    target.className =
+        "target";
+
+    target.innerHTML = `
+
+        <div class="crow">
+
+            <div class="crowBody"></div>
+
+            <div class="crowWing"></div>
+
+            <div class="crowHead">
+
+                <div class="crowEye"></div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    game.appendChild(target);
+
+    addBird(
+        target,
+        "crow"
+    );
+
+}
+
+
+/* =====================================================
+   CREATE BOMB
+===================================================== */
+
+function createBomb(){
+
+    const target =
+        document.createElement("div");
+
+    target.className =
+        "target";
+
+    target.innerHTML = `
+
+        <div class="bomb">
+
+            <div class="bombBody"></div>
+
+            <div class="bombWarning">!</div>
+
+            <div class="fuse"></div>
+
+            <div class="flame">🔥</div>
+
+        </div>
+
+    `;
+
+    game.appendChild(target);
+
+    addBird(
+        target,
+        "bomb"
+    );
+
+}
+
+
+/* =====================================================
+   ADD BIRD
+===================================================== */
+
+function addBird(
+    element,
+    type
+){
+
+    const bird = {
+
+        element:element,
+
+        type:type,
+
+        x:-120,
+
+        y:
+            90 +
+            Math.random() *
+            (window.innerHeight * .42),
+
+        speed:
+            2 +
+            Math.random() * 2 +
+            level * .4,
+
+        wave:
+            Math.random() * 10
+
+    };
+
+
+    element.style.left =
+        bird.x + "px";
+
+    element.style.top =
+        bird.y + "px";
+
+
+    birds.push(bird);
+
+}
+
+
+/* =====================================================
+   SPAWN
+===================================================== */
+
+function spawnBird(){
+
+    if(
+        !gameRunning ||
+        !levelRunning
+    ){
+        return;
+    }
+
+
+    const r =
+        Math.random();
+
+
+    const bombChance =
+        Math.min(
+            .06 + level * .015,
+            .20
+        );
+
+
+    if(r < bombChance){
+
+        createBomb();
+
+    }
+    else if(r < .32){
+
+        createCrow();
+
+    }
+    else{
+
+        createDuck();
+
+    }
+
+}
+
+
+/* =====================================================
+   SPAWNER
+===================================================== */
+
+function startSpawner(){
+
+    clearInterval(
+        spawnTimer
+    );
+
+
+    const delay =
+        Math.max(
+            400,
+            1200 - (level - 1) * 100
+        );
+
+
+    spawnTimer =
+        setInterval(
+            function(){
+
+                if(
+                    gameRunning &&
+                    levelRunning &&
+                    birds.length <
+                    Math.min(
+                        4 + level,
+                        10
+                    )
+                ){
+
+                    spawnBird();
+
+                }
+
+            },
+            delay
+        );
+
+}
+
+
+/* =====================================================
+   MOVE BIRDS
+===================================================== */
+
+function updateBirds(){
+
+    for(
+        let i = birds.length - 1;
+        i >= 0;
+        i--
+    ){
+
+        const bird =
+            birds[i];
+
+
+        bird.x +=
+            bird.speed;
+
+
+        bird.wave +=
+            .08;
+
+
+        bird.y +=
+            Math.sin(
+                bird.wave
+            ) * .7;
+
+
+        bird.element.style.left =
+            bird.x + "px";
+
+        bird.element.style.top =
+            bird.y + "px";
+
+
+        bird.element.style.transform =
+            `
+            rotate(
+                ${Math.sin(
+                    bird.wave
+                ) * 8}deg
+            )
+            `;
+
+
+        if(
+            bird.x >
+            window.innerWidth + 150
+        ){
+
+            bird.element.remove();
+
+            birds.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   CLEAR BIRDS
+===================================================== */
+
+function clearBirds(){
+
+    birds.forEach(
+        bird => {
+
+            bird.element.remove();
+
+        }
+    );
+
+    birds = [];
+
+}
+
+
+/* =====================================================
+   START GAME
+===================================================== */
+
+function startGame(){
+
+    initAudio();
+
+    clearInterval(
+        spawnTimer
+    );
+
+    clearBirds();
+
+
+    score = 0;
+    level = 1;
+    hits = 0;
+    failedShots = 0;
+
+
+    gameRunning = true;
+    levelRunning = true;
+
+
+    updateHUD();
+
+    changeEnvironment();
+
+
+    /*
+       THIS IS IMPORTANT:
+       Hide the menu BEFORE starting gameplay.
+    */
+
+    hideAllMenus();
+
+
+    for(
+        let i = 0;
+        i < 4;
+        i++
+    ){
+
+        setTimeout(
+            spawnBird,
+            i * 300
+        );
+
+    }
+
+
+    startSpawner();
+
+}
+
+
+/* =====================================================
+   NEXT LEVEL
+===================================================== */
+
+function nextLevel(){
+
+    initAudio();
+
+    clearInterval(
+        spawnTimer
+    );
+
+    clearBirds();
+
+
+    level++;
+
+    failedShots = 0;
+
+    gameRunning = true;
+
+    levelRunning = true;
+
+
+    updateHUD();
+
+    changeEnvironment();
+
+
+    /*
+       Hide level menu.
+    */
+
+    hideAllMenus();
+
+
+    for(
+        let i = 0;
+        i < 5;
+        i++
+    ){
+
+        setTimeout(
+            spawnBird,
+            i * 300
+        );
+
+    }
+
+
+    startSpawner();
+
+}
+
+
+/* =====================================================
+   LEVEL COMPLETE
+===================================================== */
+
+function completeLevel(){
+
+    if(
+        !gameRunning ||
+        !levelRunning
+    ){
+        return;
+    }
+
+
+    levelRunning = false;
+
+
+    clearInterval(
+        spawnTimer
+    );
+
+    clearBirds();
+
+
+    document.getElementById(
+        "completedLevel"
+    ).textContent =
+        level;
+
+
+    document.getElementById(
+        "levelScore"
+    ).textContent =
+        score;
+
+
+    const next =
+        level + 1;
+
+
+    document.getElementById(
+        "nextFailed"
+    ).textContent =
+        Math.min(
+            10 + (next - 1) * 5,
+            30
+        );
+
+
+    document.getElementById(
+        "nextEnvironment"
+    ).textContent =
+        environments[
+            level % environments.length
+        ].name;
+
+
+    document.getElementById(
+        "nextLevelButton"
+    ).textContent =
+        "▶ PLAY LEVEL " + next;
+
+
+    showMenu(
+        levelMenu
+    );
+
+}
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+function gameOver(){
+
+    gameRunning = false;
+
+    levelRunning = false;
+
+
+    clearInterval(
+        spawnTimer
+    );
+
+    clearBirds();
+
+
+    document.getElementById(
+        "finalScore"
+    ).textContent =
+        score;
+
+    document.getElementById(
+        "finalLevel"
+    ).textContent =
+        level;
+
+    document.getElementById(
+        "finalFailed"
+    ).textContent =
+        failedShots;
+
+
+    showMenu(
+        gameOverMenu
+    );
+
+}
+
+
+/* =====================================================
+   RESTART
+===================================================== */
+
+function restartGame(){
+
+    /*
+       STOP OLD GAME
+    */
+
+    gameRunning = false;
+
+    levelRunning = false;
+
+
+    clearInterval(
+        spawnTimer
+    );
+
+
+    clearBirds();
+
+
+    /*
+       RESET GAME DATA
+    */
+
+    score = 0;
+
+    level = 1;
+
+    hits = 0;
+
+    failedShots = 0;
+
+
+    updateHUD();
+
+
+    /*
+       IMPORTANT FIX:
+       DO NOT SHOW THE GAME OVER MENU AGAIN.
+
+       Instead, directly start a completely
+       fresh game.
+    */
+
+    startGame();
+
+}
+
+
+/* =====================================================
+   SHOOT
+===================================================== */
+
+function shoot(event){
+
+    if(
+        !gameRunning ||
+        !levelRunning
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        event.target.closest(".menu")
+    ){
+
+        return;
+
+    }
+
+
+    initAudio();
+
+    playSound("gun");
+
+
+    flash.style.opacity =
+        ".7";
+
+
+    setTimeout(
+        () => {
+
+            flash.style.opacity =
+                "0";
+
+        },
+        50
+    );
+
+
+    const x =
+        event.clientX;
+
+    const y =
+        event.clientY;
+
+
+    let hit = null;
+
+    let hitIndex = -1;
+
+
+    for(
+        let i = birds.length - 1;
+        i >= 0;
+        i--
+    ){
+
+        const bird =
+            birds[i];
+
+
+        const rect =
+            bird.element
+            .getBoundingClientRect();
+
+
+        if(
+
+            x >= rect.left - 10 &&
+            x <= rect.right + 10 &&
+            y >= rect.top - 10 &&
+            y <= rect.bottom + 10
+
+        ){
+
+            hit = bird;
+
+            hitIndex = i;
+
+            break;
+
+        }
+
+    }
+
+
+    /* ================= HIT ================= */
+
+    if(hit){
+
+        if(
+            hit.type === "duck"
+        ){
+
+            score += 10;
+
+            hits++;
+
+            playSound("duck");
+
+            showMessage(
+                "🦆 +10"
+            );
+
+        }
+
+
+        else if(
+            hit.type === "crow"
+        ){
+
+            score += 20;
+
+            hits++;
+
+            playSound("crow");
+
+            showMessage(
+                "🐦 +20"
+            );
+
+        }
+
+
+        else if(
+            hit.type === "bomb"
+        ){
+
+            score -= 10;
+
+            if(score < 0){
+                score = 0;
+            }
+
+            playSound("bomb");
+
+            showMessage(
+                "💣 -10"
+            );
+
+        }
+
+
+        hit.element.remove();
+
+        birds.splice(
+            hitIndex,
+            1
+        );
+
+
+        updateHUD();
+
+
+        /*
+           Every 100 points completes
+           the current level.
+        */
+
+        if(
+            score >= level * 100
+        ){
+
+            completeLevel();
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* ================= MISS ================= */
+
+    failedShots++;
+
+
+    updateHUD();
+
+
+    showMessage(
+        "MISS ❌"
+    );
+
+
+    if(
+        failedShots >=
+        getFailedLimit()
+    ){
+
+        gameOver();
+
+    }
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(text){
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        () => {
+
+            message.style.display =
+                "none";
+
+        },
+        500
+    );
+
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+startButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        startGame();
+
+    }
+);
+
+
+nextLevelButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        nextLevel();
+
+    }
+);
+
+
+restartButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        restartGame();
+
+    }
+);
+
+
+/* =====================================================
+   SHOOT EVENT
+===================================================== */
+
+game.addEventListener(
+    "pointerdown",
+    shoot
+);
+
+
+/* =====================================================
+   GAME LOOP
+===================================================== */
+
+function gameLoop(){
+
+    if(
+        gameRunning &&
+        levelRunning
+    ){
+
+        updateBirds();
+
+    }
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =====================================================
+   INITIAL STATE
+===================================================== */
+
+updateHUD();
+
+showMenu(
+    startMenu
+);
+
+gameLoop();
+
+</script>
+
+</body>
+</html>
